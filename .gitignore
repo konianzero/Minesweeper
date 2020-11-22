@@ -1,0 +1,23 @@
+# gradle files
+.gradle/
+gradle/
+build.gradle
+settings.gradle
+gradlew
+gradlew.bat
+
+# IntelliJ IDEA files
+.idea/
+build/
+out/
+test/
+
+# JetBrains course files
+course-info.yaml
+course-remote-info.yaml
+task.html
+task-info.yaml
+task-remote-info.yaml
+
+# other
+Problems/
