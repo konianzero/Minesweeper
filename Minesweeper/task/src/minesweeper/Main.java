@@ -1,6 +1,5 @@
 package minesweeper;
 
-import minesweeper.field.MineField;
 import minesweeper.view.MineSweeperGame;
 
 import java.util.Scanner;
