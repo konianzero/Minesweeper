@@ -1,7 +1,10 @@
 package minesweeper;
 
+import minesweeper.field.MineField;
+
 public class Main {
     public static void main(String[] args) {
-        // write your code here
+        MineField mineField = new MineField();
+        System.out.println(mineField);
     }
 }
