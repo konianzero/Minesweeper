@@ -1,10 +1,15 @@
 package minesweeper;
 
 import minesweeper.field.MineField;
+import minesweeper.view.MineSweeperGame;
+
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        MineField mineField = new MineField();
-        System.out.println(mineField);
+        Scanner scanner = new Scanner(System.in);
+
+        MineSweeperGame game = new MineSweeperGame(scanner);
+        game.start();
     }
 }
