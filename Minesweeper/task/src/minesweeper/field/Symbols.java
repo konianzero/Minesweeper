@@ -1,8 +1,10 @@
 package minesweeper.field;
 
-enum Symbols {
+public enum Symbols {
     SAFE ('.'),
-    MINE ('X');
+    MINE ('X'),
+    EMPTY_MARK('*'),
+    MINE_MARK('x');
 
     private final char ch;
 

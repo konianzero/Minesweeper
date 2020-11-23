@@ -1,14 +1,16 @@
 package minesweeper.field;
 
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.IntStream;
 
-import static minesweeper.field.Symbols.MINE;
-import static minesweeper.field.Symbols.SAFE;
+import static minesweeper.field.Symbols.*;
 
 public class MineField {
+    private final static String COLUMN_HEADER = " │123456789│";
+    private final static String LINE = "—│—————————│";
+    private final static String WALL = "|";
+    private final static String LS = "\n";
+
     private static final int SIZE = 9;
     private static final int[][] neighborsCoordinates = new int[][] {
             {-1, -1}, {0, -1}, {1, -1},
@@ -17,25 +19,27 @@ public class MineField {
     };
 
     private final Random random = new Random();
-    private final int minesNum;
-    private final int shift;
 
+    private int minesNum;
+    private int minesMarked;
+    private int emptyMarked;
+    private int shift;
     private char[][] field;
 
-    public MineField(int minesNum) {
+    public void initField(int minesNum) {
         this.minesNum = minesNum;
         shift = (SIZE * SIZE) / minesNum;
-        initField();
+        fillField(SAFE);
         placeRandomMines();
         setNumberOfMinesAround();
     }
 
-    private void initField() {
+    private void fillField(Symbols symbol) {
         field = new char[SIZE][SIZE];
 
         IntStream.range(0, SIZE)
                 .forEach(row -> IntStream.range(0, SIZE)
-                        .forEach(col -> field[row][col] = SAFE.get())
+                        .forEach(col -> field[row][col] = symbol.get())
                 );
     }
 
@@ -100,16 +104,62 @@ public class MineField {
         }
     }
 
+    public char getCell(int row, int col) {
+        return field[row][col];
+    }
+
+    public void markCell(int row, int col) {
+        if (field[row][col] == MINE.get()) {
+            minesMarked++;
+            field[row][col] = MINE_MARK.get();
+        } else if (field[row][col] == SAFE.get()) {
+            emptyMarked++;
+            field[row][col] = EMPTY_MARK.get();
+        }
+    }
+
+    public void unmarkCell(int row, int col) {
+        if (field[row][col] == EMPTY_MARK.get()) {
+            emptyMarked--;
+            field[row][col] = SAFE.get();
+        } else if (field[row][col] == MINE_MARK.get()) {
+            minesMarked--;
+            field[row][col] = MINE.get();
+        }
+    }
+
+    public boolean allMinesMarked() {
+         return minesNum == minesMarked;
+    }
+
+    public boolean isEmptyMarked() {
+        return emptyMarked > 0;
+    }
+
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder(LS + COLUMN_HEADER + LS);
+        result.append(LINE + LS);
         IntStream.range(0, SIZE)
                 .forEach(row -> {
+                            result.append(row + 1).append(WALL);
                             IntStream.range(0, SIZE)
-                                    .forEach(col -> result.append(field[row][col]));
-                            result.append("\n");
+                                    .forEach(col -> result.append(getMark(row, col)));
+                            result.append(WALL + LS);
                         }
                 );
+        result.append(LINE);
         return result.toString();
+    }
+
+    private char getMark(int r, int c) {
+        char mark = field[r][c];
+
+        if (mark == MINE.get()) {
+            return SAFE.get();
+        } else if (mark == MINE_MARK.get()) {
+            return EMPTY_MARK.get();
+        }
+        return mark;
     }
 }
