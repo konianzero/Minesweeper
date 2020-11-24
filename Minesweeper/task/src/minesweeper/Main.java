@@ -1,7 +1,7 @@
 package minesweeper;
 
 import minesweeper.controller.Controller;
-import minesweeper.field.MineField;
+import minesweeper.model.MineField;
 import minesweeper.view.MineSweeperGame;
 
 import java.util.Scanner;

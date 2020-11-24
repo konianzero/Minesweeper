@@ -4,4 +4,8 @@
 __Hard__:
 
 - Minesweeper
-
+    - Lay the groundwork
+    - Flexible mines
+    - Look around you
+    - Prepare for battle
+    - Battle_

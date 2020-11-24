@@ -1,7 +1,7 @@
 package minesweeper.view;
 
 import minesweeper.controller.Controller;
-import minesweeper.field.MineField;
+import minesweeper.model.MineField;
 
 import java.util.Scanner;
 
@@ -10,9 +10,10 @@ public class MineSweeperGame {
     public static final String SET_MARKS = "Set/delete mines marks (x and y coordinates): > ";
     public static final String CONGRATULATIONS = "Congratulations! You found all the mines!";
 
-    public static final String IS_NUMBER = "There is a number here!";
+    public static final String FAILED = "You stepped on a mine and failed!";
 
-    private Scanner scanner;
+    private final Scanner scanner;
+
     private Controller controller;
 
     public MineSweeperGame(Scanner scanner) {
@@ -29,17 +30,19 @@ public class MineSweeperGame {
 
         controller.onStart(minesNum);
 
-        setMark();
+        settingMarks();
     }
 
-    private void setMark() {
-        while (!controller.isOnlyMinesMarked()) {
+    private void settingMarks() {
+        while (!controller.allMinesFound()) {
             System.out.print(SET_MARKS);
             int x = scanner.nextInt();
             int y = scanner.nextInt();
+            String s = scanner.next();
 
-            if (!controller.markCell(x, y)) {
-                System.out.println(IS_NUMBER);
+            if (!controller.processCell(x, y, s)) {
+                System.out.println(FAILED);
+                return;
             }
         }
         System.out.println(CONGRATULATIONS);

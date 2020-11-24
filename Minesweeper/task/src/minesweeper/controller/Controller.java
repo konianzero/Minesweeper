@@ -1,9 +1,10 @@
 package minesweeper.controller;
 
-import minesweeper.field.MineField;
+import minesweeper.model.Marks;
+import minesweeper.model.MineField;
 import minesweeper.view.MineSweeperGame;
 
-import static minesweeper.field.Symbols.*;
+import static minesweeper.model.Marks.*;
 
 public class Controller {
     private MineSweeperGame game;
@@ -22,17 +23,20 @@ public class Controller {
         game.refresh(field);
     }
 
-    public boolean markCell(int x, int y) {
+    public boolean processCell(int x, int y, String s) {
         int r = convert(y);
         int c = convert(x);
-        char mark = field.getCell(r, c);
 
-        if (isNumberMark(mark)) {
-            return false;
-        } else if (isNotMarked(mark)) {
-            field.markCell(r, c);
-        } else if (isMarked(mark)) {
-            field.unmarkCell(r, c);
+        switch (s) {
+            case "free":
+                if (!explore(r, c)) {
+                    game.refresh(field);
+                    return false;
+                }
+                break;
+            case "mine":
+                mark(r, c);
+                break;
         }
 
         game.refresh(field);
@@ -43,19 +47,30 @@ public class Controller {
         return i - 1;
     }
 
-    private boolean isNumberMark(char mark) {
-        return mark != SAFE.get() && mark != MINE.get() && mark != EMPTY_MARK.get() && mark != MINE_MARK.get();
+    private boolean explore(int r, int c) {
+        char mark = field.getCell(r, c);
+
+        if (Marks.isNumberMark(mark)) {
+            field.makeVisible(r, c);
+        } else if (FREE.equals(mark)) {
+            field.exploreCell(r, c);
+        } else if (MINE.equals(mark)) {
+            field.setMinesVisible();
+            return false;
+        }
+        return true;
     }
 
-    private boolean isMarked(char mark) {
-        return mark != SAFE.get() && mark != MINE.get();
+    private void mark(int r, int c) {
+        if (field.isMarked(r, c)) {
+            field.unmarkCell(r, c);
+        } else {
+            field.markCell(r, c);
+        }
     }
 
-    private boolean isNotMarked(char mark) {
-        return mark != EMPTY_MARK.get() && mark != MINE_MARK.get();
-    }
-
-    public boolean isOnlyMinesMarked() {
-        return !field.isEmptyMarked() && field.allMinesMarked();
+    public boolean allMinesFound() {
+        return (!field.hasUnexploredMarked() && field.allMinesMarked())
+                || field.hasOpenedAllSafeCells();
     }
 }
