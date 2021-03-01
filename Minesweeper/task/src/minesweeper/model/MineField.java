@@ -34,6 +34,7 @@ public class MineField {
 
         field = new char[SIZE][SIZE];
 
+        fillField(UNEXPLORED);
         initMines();
 
         visibility = new BitSet(SIZE * SIZE);
