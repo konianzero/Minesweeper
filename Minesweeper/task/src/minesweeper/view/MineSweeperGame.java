@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class MineSweeperGame {
     public static final String MINES_NUM = "How many mines do you want on the field? > ";
-    public static final String SET_MARKS = "Set/delete mines marks (x and y coordinates): > ";
+    public static final String SET_MARKS = "Set/unset mines marks or claim a cell as free: > ";
     public static final String CONGRATULATIONS = "Congratulations! You found all the mines!";
 
     public static final String FAILED = "You stepped on a mine and failed!";
